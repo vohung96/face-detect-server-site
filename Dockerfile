@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:16
 
 WORKDIR /app
 
@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libgif-dev \
     librsvg2-dev \
-    python3 \
-    python3-pip \
+    python \
+    python-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy package.json và package-lock.json
