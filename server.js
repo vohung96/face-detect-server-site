@@ -55,14 +55,31 @@ app.use(express.json({ limit: '50mb' }));
 
 // Load các model cần thiết
 const loadModels = async (
-    models = [
+    useTinyModel
+  ) => {
+    let models = [
       'ssd_mobilenetv1_model',
       'tiny_face_detector_model',
       'face_landmark_68_model',
       'face_recognition_model',
       'face_expression_model',
-    ],
-  ) => {
+    ];
+    if (useTinyModel) {
+      models = [
+        'tiny_face_detector_model',
+        'face_landmark_68_model',
+        'face_recognition_model',
+        'face_expression_model',
+      ];
+    } else if (useTinyModel === false) {
+      models = [
+        'ssd_mobilenetv1_model',
+        'face_landmark_68_model',
+        'face_recognition_model',
+        'face_expression_model',
+      ];
+    }
+
     try {
       // Kiểm tra faceapi có tồn tại không
       if (!faceapi) {
@@ -145,14 +162,17 @@ const loadModels = async (
 
 // Hàm xử lý ảnh và phát hiện khuôn mặt
 async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
+
+  console.log(`detectFaces:  ${image}`);
+
   try {
     const detectionPromise = (async () => {
-      const loaded = await loadModels();
+      const loaded = await loadModels(useTinyModel);
       if (!loaded) {
         console.error('Failed to load models');
         return null;
       }
-      
+
       const img = new Image();
       await new Promise((resolve, reject) => {
         img.onload = resolve;
