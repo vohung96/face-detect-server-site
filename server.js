@@ -149,48 +149,38 @@ const loadModels = async (
   };
 
 // Hàm xử lý ảnh và phát hiện khuôn mặt
-async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
+async function detectFaces(image, useTinyModel = true) {
   try {
-    const detectionPromise = (async () => {
-      const loaded = await loadModels(useTinyModel);
-      if (!loaded) {
-        console.error('Failed to load models');
-        return null;
-      }
+    const loaded = await loadModels(useTinyModel);
+    if (!loaded) {
+      console.error('Failed to load models');
+      return null;
+    }
 
-      const img = new Image();
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = image;
-      });
-
-      const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions({
-        scoreThreshold: 0.5,
-        inputSize: 320,
-      }) : new faceapi.SsdMobilenetv1Options();
-
-      const detections = await faceapi
-        .detectSingleFace(img, options)
-        .withFaceLandmarks()
-        .withFaceDescriptor()
-        .withFaceExpressions();
-
-      if (!_.get(detections, 'detection._box')) {
-        console.log('No face detected in image');
-        return null;
-      }
-
-      return detections;
-    })();
-
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(new Error(`Face detection timeout after ${timeoutMs}ms`));
-      }, timeoutMs);
+    const img = new Image();
+    await new Promise((resolve, reject) => {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = image;
     });
 
-    return await Promise.race([detectionPromise, timeoutPromise]);
+    const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions({
+      scoreThreshold: 0.5,
+      inputSize: 320,
+    }) : new faceapi.SsdMobilenetv1Options();
+
+    const detections = await faceapi
+      .detectSingleFace(img, options)
+      .withFaceLandmarks()
+      .withFaceDescriptor()
+      .withFaceExpressions();
+
+    if (!_.get(detections, 'detection._box')) {
+      console.log('No face detected in image');
+      return null;
+    }
+
+    return detections;
   } catch (error) {
     console.error('Unexpected error in detectFaces:', error);
     return null;
@@ -208,7 +198,7 @@ app.post('/detect', async (req, res) => {
     const results = await Promise.all(
       images.map(async (image) => {
         try {
-          return await detectFaces(image, 5000, useTinyModel);
+          return await detectFaces(image, useTinyModel);
         } catch (error) {
           return null;
         }
