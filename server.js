@@ -50,7 +50,6 @@ faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
 const app = express();
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Xử lý preflight request cho tất cả routes
 app.use(express.json({ limit: '50mb' }));
 
 // Load các model cần thiết
