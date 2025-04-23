@@ -1,18 +1,17 @@
-FROM node:16
+FROM node:16-alpine
 
 WORKDIR /app
 
 # Cài đặt các dependencies cần thiết cho canvas
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libcairo2-dev \
-    libpango1.0-dev \
-    libjpeg-dev \
-    libgif-dev \
-    librsvg2-dev \
-    python \
-    python-pip \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    build-base \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev \
+    librsvg-dev \
+    python3 \
+    py3-pip
 
 # Copy package.json và package-lock.json
 COPY package*.json ./
