@@ -6,11 +6,17 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "127.0.0.1:3001:3001"
     volumes:
       - ./models:/app/models:ro
       - .:/app
     environment:
       - NODE_ENV=production
       - PORT=3001
-    restart: unless-stopped 
+    restart: unless-stopped
+    networks:
+      - face-detect-network
+
+networks:
+  face-detect-network:
+    driver: bridge 
