@@ -152,9 +152,13 @@ async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
         console.error('Failed to load models');
         return null;
       }
-
+      
       const img = new Image();
-      img.src = image;
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = image;
+      });
 
       const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions() : new faceapi.SsdMobilenetv1Options();
 
