@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const { Canvas, Image, ImageData } = require('canvas');
 const faceapi = require('face-api.js');
 const _ = require('lodash');
@@ -9,15 +8,6 @@ const fs = require('fs');
 // Khai báo các biến cần thiết
 const loadingPromises = new Map();
 const MODEL_PATH = path.join(__dirname, 'models');
-
-// Cấu hình CORS
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  maxAge: 86400
-};
 
 // Kiểm tra thư mục models
 if (!fs.existsSync(MODEL_PATH)) {
@@ -49,7 +39,6 @@ const loadModelWeights = async (modelName) => {
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
 const app = express();
-app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 
 // Load các model cần thiết
