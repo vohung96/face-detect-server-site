@@ -165,7 +165,10 @@ async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
         img.src = image;
       });
 
-      const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions() : new faceapi.SsdMobilenetv1Options();
+      const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions({
+        scoreThreshold: 0.5,
+        inputSize: 320,
+      }) : new faceapi.SsdMobilenetv1Options();
 
       const detections = await faceapi
         .detectSingleFace(img, options)
