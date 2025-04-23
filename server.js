@@ -149,7 +149,8 @@ async function detectFaces(image, timeoutMs = 10000) {
         return null;
       }
 
-      const img = await Canvas.loadImage(image);
+      const img = new Image();
+      img.src = image;
       const detections = await faceapi
         .detectSingleFace(img)
         .withFaceLandmarks()
@@ -196,7 +197,7 @@ app.post('/detect', async (req, res) => {
       })
     );
 
-    res.json({ results });
+    res.json(results);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

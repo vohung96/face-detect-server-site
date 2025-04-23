@@ -28,12 +28,15 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // Hiển thị ảnh preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%">`;
-            };
-            reader.readAsDataURL(file);
+            // Đọc file và gửi request trong một Promise
+            const imageData = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%">`;
+                    resolve(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            });
 
             // Gọi API detect
             try {
@@ -43,7 +46,10 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        images: [e.target.result]
+                        images: [
+                            imageData,
+                            'https://static-cloud.lotuslms.com/static/demotlx/2025/04/21/55/6805b03f8d5aecbbd003fb55/6806052fbba59296730b52a2.png'
+                        ]
                     })
                 });
 
