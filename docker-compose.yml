@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  face-detect-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./models:/app/models:ro
+      - .:/app
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    restart: unless-stopped 
