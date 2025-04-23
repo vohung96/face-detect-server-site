@@ -162,9 +162,6 @@ const loadModels = async (
 
 // Hàm xử lý ảnh và phát hiện khuôn mặt
 async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
-
-  console.log(`detectFaces:  ${image}`);
-
   try {
     const detectionPromise = (async () => {
       const loaded = await loadModels(useTinyModel);
@@ -220,10 +217,9 @@ app.post('/detect', async (req, res) => {
     const results = await Promise.all(
       images.map(async (image) => {
         try {
-          const detections = await detectFaces(image, 5000, useTinyModel);
-          return { success: true, detections };
+          return await detectFaces(image, 5000, useTinyModel);
         } catch (error) {
-          return { success: false, error: error.message };
+          return null;
         }
       })
     );
