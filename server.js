@@ -10,6 +10,15 @@ const fs = require('fs');
 const loadingPromises = new Map();
 const MODEL_PATH = path.join(__dirname, 'models');
 
+// Cấu hình CORS
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  maxAge: 86400
+};
+
 // Kiểm tra thư mục models
 if (!fs.existsSync(MODEL_PATH)) {
   console.error(`Models directory not found at ${MODEL_PATH}`);
@@ -40,7 +49,8 @@ const loadModelWeights = async (modelName) => {
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Xử lý preflight request cho tất cả routes
 app.use(express.json({ limit: '50mb' }));
 
 // Load các model cần thiết
