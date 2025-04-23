@@ -11,7 +11,11 @@ RUN apk add --no-cache \
     giflib-dev \
     librsvg-dev \
     python3 \
-    py3-pip
+    py3-pip \
+    g++ \
+    make \
+    gcc \
+    libc6-compat
 
 # Copy package.json và package-lock.json
 COPY package*.json ./
