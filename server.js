@@ -56,6 +56,7 @@ app.use(express.json({ limit: '50mb' }));
 // Load các model cần thiết
 const loadModels = async (
     models = [
+      'ssd_mobilenetv1_model',
       'tiny_face_detector_model',
       'face_landmark_68_model',
       'face_recognition_model',
@@ -94,6 +95,9 @@ const loadModels = async (
               const { manifest, weights } = await loadModelWeights(model);
               
               switch (model) {
+                case 'ssd_mobilenetv1_model':
+                  await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_PATH);
+                  break;
                 case 'tiny_face_detector_model':
                   await faceapi.nets.tinyFaceDetector.loadFromDisk(MODEL_PATH);
                   break;
@@ -140,7 +144,7 @@ const loadModels = async (
   };
 
 // Hàm xử lý ảnh và phát hiện khuôn mặt
-async function detectFaces(image, timeoutMs = 10000) {
+async function detectFaces(image, timeoutMs = 10000, useTinyModel = true) {
   try {
     const detectionPromise = (async () => {
       const loaded = await loadModels();
@@ -151,8 +155,11 @@ async function detectFaces(image, timeoutMs = 10000) {
 
       const img = new Image();
       img.src = image;
+
+      const options = useTinyModel ? new faceapi.TinyFaceDetectorOptions() : new faceapi.SsdMobilenetv1Options();
+
       const detections = await faceapi
-        .detectSingleFace(img)
+        .detectSingleFace(img, options)
         .withFaceLandmarks()
         .withFaceDescriptor()
         .withFaceExpressions();
@@ -181,7 +188,7 @@ async function detectFaces(image, timeoutMs = 10000) {
 // API endpoint
 app.post('/detect', async (req, res) => {
   try {
-    const { images } = req.body;
+    const { images, useTinyModel = true } = req.body;
     if (!images || !Array.isArray(images)) {
       return res.status(400).json({ error: 'Invalid input: images array required' });
     }
@@ -189,7 +196,7 @@ app.post('/detect', async (req, res) => {
     const results = await Promise.all(
       images.map(async (image) => {
         try {
-          const detections = await detectFaces(image);
+          const detections = await detectFaces(image, 5000, useTinyModel);
           return { success: true, detections };
         } catch (error) {
           return { success: false, error: error.message };
