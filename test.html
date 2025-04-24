@@ -19,7 +19,9 @@
     <div id="preview"></div>
     <div id="result"></div>
 
-    <script>
+    <script type="module">
+        import { formatDetectionResults } from './face-utils.js';
+        
         const imageInput = document.getElementById('imageInput');
         const preview = document.getElementById('preview');
         const result = document.getElementById('result');
@@ -53,8 +55,10 @@
                     })
                 });
 
-                const data = await response.json();
-                result.textContent = JSON.stringify(data, null, 2);
+                const rawData = await response.json();
+                // Format kết quả trước khi hiển thị
+                const formattedData = formatDetectionResults(rawData);
+                result.textContent = JSON.stringify(formattedData, null, 2);
             } catch (error) {
                 result.textContent = 'Error: ' + error.message;
             }

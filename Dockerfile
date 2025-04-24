@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM gcr.io/distroless/nodejs20-debian11
 
 WORKDIR /app
 
