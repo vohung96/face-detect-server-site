@@ -1,6 +1,9 @@
-FROM node:16-slim
+FROM node:16.20.2-slim
 
 WORKDIR /app
+
+# Kiểm tra phiên bản Node.js
+RUN node --version
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
