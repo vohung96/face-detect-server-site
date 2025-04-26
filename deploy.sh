@@ -6,7 +6,7 @@ git pull
 # Xóa container và image cũ
 echo "Cleaning up old containers and images..."
 docker-compose down
-docker rmi face-detect-server || true
+docker rmi face-detect-server
 
 # Build Docker image
 echo "Building Docker image..."
