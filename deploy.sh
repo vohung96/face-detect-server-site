@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Pull code mới
-git pull
+git pull origin new
 
 # Build Docker image
 docker build -t face-detect-server .
