@@ -11,6 +11,9 @@ RUN apk add --no-cache \
     giflib-dev \
     librsvg-dev
 
+# Kiểm tra phiên bản Node.js
+RUN node --version
+
 WORKDIR /app
 
 # Copy package files
