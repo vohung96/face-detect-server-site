@@ -7,6 +7,6 @@ git pull origin new
 docker build -t face-detect-server .
 
 # Chạy container
-docker-compose up -d
+docker-compose up
 
 echo "✅ Deploy completed!" 

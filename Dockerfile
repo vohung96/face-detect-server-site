@@ -16,13 +16,16 @@ RUN apt-get update && apt-get install -y \
 
 # Copy package files
 COPY package*.json ./
-COPY yarn.lock ./
 
 # Install dependencies
-RUN yarn install --production
+RUN npm install --production
 
 # Copy source code
 COPY . .
+
+# Kiểm tra các file quan trọng
+RUN ls -la /app && \
+    ls -la /app/models/
 
 # Expose port
 EXPOSE 3001
