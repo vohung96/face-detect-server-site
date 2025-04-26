@@ -1,12 +1,8 @@
-FROM node:16.20.2-slim
+FROM ubuntu:20.04
 
-WORKDIR /app
-
-# Kiểm tra phiên bản Node.js
-RUN node --version
-
-# Install system dependencies
+# Cài đặt Node.js 16 và các dependencies
 RUN apt-get update && apt-get install -y \
+    curl \
     python3 \
     make \
     g++ \
@@ -15,7 +11,14 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libgif-dev \
     librsvg2-dev \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Kiểm tra phiên bản Node.js
+RUN node --version
 
 # Copy package files
 COPY package*.json ./
