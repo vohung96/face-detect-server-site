@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM ubuntu:18.04
 
 # Cài đặt các dependencies cần thiết
 RUN apt-get update && apt-get install -y \
@@ -19,6 +19,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+# Kiểm tra phiên bản Node.js
+RUN node --version
+
 WORKDIR /app
 
 # Copy package files
@@ -29,6 +32,10 @@ RUN npm install --production
 
 # Copy source code
 COPY . .
+
+# Kiểm tra các file quan trọng
+RUN ls -la /app && \
+    ls -la /app/models/
 
 # Expose port
 EXPOSE 3001
