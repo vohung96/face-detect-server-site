@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16.20.2-alpine3.18
 
 # Cài đặt các dependencies cần thiết
 RUN apk add --no-cache \
