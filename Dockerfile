@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:bullseye-slim
 
 # Cài đặt Node.js 16 và các dependencies
 RUN apt-get update && apt-get install -y \
